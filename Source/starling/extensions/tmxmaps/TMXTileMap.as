@@ -9,14 +9,14 @@
  */
 package starling.extensions.tmxmaps
 {
-	import flash.display.Bitmap;
-	import flash.geom.Point;
-	import flash.utils.ByteArray;
-	import flash.utils.Dictionary;
-	import starling.display.Image;
-	import starling.extensions.tmxmaps.tools.Base64;
+import flash.display.Bitmap;
+import flash.geom.Point;
+import flash.utils.ByteArray;
+import flash.utils.Dictionary;
 
-	/**
+import starling.extensions.tmxmaps.tools.Base64;
+
+/**
 	 * @author Felipe Borgiani
 	 * Based on the original TMXTileSheet by Shaun Mitchell
 	 */
@@ -26,7 +26,7 @@ package starling.extensions.tmxmaps
 		private var _mapXML:XML;
 		// Layers and tilesheet holders
 		private var _layers:Vector.<TMXLayer>;
-		private var _tilesheets:Vector.<TMXTileSheet>;
+		private var _tilesheets:Vector.<TMXTileSet>;
 		private var _objectGroups:Vector.<TMXObjectGroup>;
 		// variables pertaining to map description
 		private var _numLayers:uint;
@@ -37,8 +37,6 @@ package starling.extensions.tmxmaps
 		private var _tileWidth:uint;
 		private var _backgroundColor:uint;
 		private var _properties:Dictionary;
-		// used to get the correct tile from various tilesheets
-		private var _embedTilesets:Vector.<Bitmap>;		
 
 		public function TMXTileMap():void
 		{
@@ -51,7 +49,7 @@ package starling.extensions.tmxmaps
 
 			_properties = new Dictionary();
 			_layers = new Vector.<TMXLayer>();
-			_tilesheets = new Vector.<TMXTileSheet>();
+			_tilesheets = new Vector.<TMXTileSet>();
 			_objectGroups = new Vector.<TMXObjectGroup>();
 		}
 		
@@ -65,7 +63,7 @@ package starling.extensions.tmxmaps
 		{
 			var map:TMXTileMap = new TMXTileMap();
 			
-			map.load(tmx, tilesets);
+			map.load(tmx);
 			
 			return map;
 		}
@@ -73,12 +71,10 @@ package starling.extensions.tmxmaps
 		/**
 		 * Loads the tilemap from a tmx file and a vector of tilesets
 		 * @param	tmx The XML from the .tmx file
-		 * @param	tilesets A vector of bitmaps, containing all the tileset images used on the tmx map
 		 */
-		public function load(tmx:XML, tilesets:Vector.<Bitmap>):void
+		public function load(tmx:XML):void
 		{
 			_mapXML = tmx;
-			_embedTilesets = tilesets;
 
 			loadTilesets();
 			loadObjectGroups(tmx);
@@ -90,7 +86,7 @@ package starling.extensions.tmxmaps
 			return _layers;
 		}
 
-		public function get tilesheets():Vector.<TMXTileSheet>
+		public function get tilesheets():Vector.<TMXTileSet>
 		{
 			return _tilesheets;
 		}
@@ -256,9 +252,9 @@ package starling.extensions.tmxmaps
 
 				for (var i:int = 0; i < _numTilesets; i++)
 				{
-					var tileSheet:TMXTileSheet = new TMXTileSheet();
+					var tileSheet:TMXTileSet = new TMXTileSet();
 					//trace(_TMX.tileset[i].@name, _embedTilesets[i], _TMX.tileset[i].@tilewidth, _TMX.tileset[i].@tileheight, _TMX.tileset[i].@firstgid - 1, _TMX.tileset[i].@spacing, _TMX.tileset[i].@margin);
-					tileSheet.loadTileSheet(_mapXML.tileset[i].@name, _embedTilesets[i], _mapXML.tileset[i].@tilewidth, _mapXML.tileset[i].@tileheight, _mapXML.tileset[i].@firstgid - 1, _mapXML.tileset[i].@spacing, _mapXML.tileset[i].@margin);
+					tileSheet.loadTileSheet(_mapXML.tileset[i].@name, _mapXML.tileset[i].@tilewidth, _mapXML.tileset[i].@tileheight, _mapXML.tileset[i].@firstgid - 1, _mapXML.tileset[i].@spacing, _mapXML.tileset[i].@margin);
 					
 					for (var tcounter:int = 0; tcounter < _mapXML.tileset[i].tile.length(); tcounter++)
 					{
@@ -352,21 +348,7 @@ package starling.extensions.tmxmaps
 						col = 0;
 						row += _tileHeight;
 					}
-
-					if (_layers[i].layerData[j] != 0)
-					{
-						var img:Image = new Image(findTileWithGID(_layers[i].layerData[j]).texture);
-						img.x = col;
-						img.y = row;
-						_layers[i].layerSprite.addChild(img);
-					}
-
 					col += _tileWidth;
-				}
-				
-				if (!_layers[i].layerSprite.isFlattened)
-				{
-					_layers[i].layerSprite.flatten();
 				}
 			}
 

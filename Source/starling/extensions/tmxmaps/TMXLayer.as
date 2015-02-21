@@ -20,13 +20,13 @@ package starling.extensions.tmxmaps
 	{
 		private var _name:String;		
 		private var _layerData:Array = new Array(); // Layer Data is just an array of tile GIDs
-		private var _layerSprite:Sprite;
+//		private var _layerSprite:Sprite;
 		private var _properties:Dictionary = new Dictionary();
 		
 		public function TMXLayer(name:String):void
 		{
 			_name = name;
-			_layerSprite = new Sprite();
+//			_layerSprite = new Sprite();
 		}
 		
 		public function get layerData():Array
@@ -34,11 +34,11 @@ package starling.extensions.tmxmaps
 			return _layerData;
 		}
 		
-		public function get layerSprite():Sprite
-		{
-			return _layerSprite;
-		}
-		
+//		public function get layerSprite():Sprite
+//		{
+//			return _layerSprite;
+//		}
+//
 		public function get name():String 
 		{
 			return _name;

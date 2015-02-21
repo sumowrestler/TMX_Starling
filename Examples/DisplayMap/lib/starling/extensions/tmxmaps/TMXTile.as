@@ -17,18 +17,18 @@ package starling.extensions.tmxmaps
 	 */
 	public class TMXTile 
 	{
-		private var _parentSheet:TMXTileSheet;
+		private var _parentSheet:TMXTileSet;
 		private var _tileID:uint;
 		private var _properties:Dictionary;
 		
-		public function TMXTile(parentSheet:TMXTileSheet, tileID:uint)
+		public function TMXTile(parentSheet:TMXTileSet, tileID:uint)
 		{
 			this._properties = new Dictionary();
 			this._parentSheet = parentSheet;
 			this._tileID = tileID;
 		}
 		
-		public function get parentSheet():TMXTileSheet 
+		public function get parentSheet():TMXTileSet
 		{
 			return _parentSheet;
 		}
